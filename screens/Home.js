@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { View, Text, StyleSheet, FlatList, ScrollView } from 'react-native'
+import { View, Text, StyleSheet, FlatList, ScrollView, SafeAreaView } from 'react-native'
 import Axios from 'axios';
 import Constants from 'expo-constants';
 import Item from '../components/Item';
@@ -12,28 +12,37 @@ const Home = () => {
     useEffect(() => {
         Axios.get('https://hn.algolia.com/api/v1/search_by_date?tags=story&page=0').then(res => {
             setPosts(res.data.hits);
-        })
+        });
         const intervalId = setInterval(() => {
             setPageCount(pageCount => pageCount + 1)
         }, 10000);
         return () => {
-            clearInterval(intervalId)
+            clearInterval(intervalId);
         }
     }, []);
 
     useEffect(() => {
-
+        pageCount > 0 && Axios.get(`https://hn.algolia.com/api/v1/search_by_date?tags=story&page=${pageCount}`).then(res => {
+            setPosts([...posts, ...res.data.hits]);
+        });
     }, [pageCount])
 
     return (
-        <ScrollView contentContainerStyle={styles.container}>
+        <SafeAreaView style={styles.container}>
             {/* Display the title, URL, created_at, and author of each post in a table */}
             <FlatList
                 data={posts}
-                renderItem={({ item }) => <Item title={item.title} />}
-                keyExtractor={item => item.objectID}
+                renderItem={({ item }) => (
+                    <Item
+                        title={item.title}
+                        url={item.url}
+                        created_at={item.created_at}
+                        author={item.author}
+                    />
+                )}
+                keyExtractor={item => item.title}
             />
-        </ScrollView>
+        </SafeAreaView >
     )
 }
 
