@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { View, Text, StyleSheet, FlatList, ScrollView, SafeAreaView } from 'react-native'
+import { View, Text, StyleSheet, FlatList, SafeAreaView } from 'react-native'
 import Axios from 'axios';
 import Item from '../components/Item';
 
@@ -32,6 +32,12 @@ const Home = ({ navigation }) => {
 
     return (
         <SafeAreaView style={styles.container}>
+            <View style={styles.row}>
+                <Text style={styles.column}>Title</Text>
+                <Text style={styles.column}>Url</Text>
+                <Text style={styles.column}>Creatd At</Text>
+                <Text style={styles.column}>Author</Text>
+            </View>
             <FlatList
                 data={posts}
                 renderItem={({ item }) => (
@@ -44,7 +50,7 @@ const Home = ({ navigation }) => {
                         data={item}
                     />
                 )}
-                keyExtractor={item => item.title}
+                keyExtractor={item => item.objectID}
                 onEndReached={fetchNewData}
             />
         </SafeAreaView >
@@ -57,6 +63,19 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         alignItems: 'center',
         justifyContent: 'center'
+    },
+    row: {
+        width: '100%',
+        flexDirection: 'row',
+        borderBottomColor: 'black',
+        borderBottomWidth: 1
+    },
+    column: {
+        width: '25%',
+        borderLeftColor: 'black',
+        borderLeftWidth: 1,
+        padding: 5,
+        fontWeight: 'bold'
     }
 });
 
