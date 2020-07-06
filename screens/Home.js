@@ -27,6 +27,10 @@ const Home = () => {
         });
     }, [pageCount])
 
+    const fetchNewData = () => {
+        setPageCount(pageCount + 1);
+    }
+
     return (
         <SafeAreaView style={styles.container}>
             {/* Display the title, URL, created_at, and author of each post in a table */}
@@ -41,6 +45,7 @@ const Home = () => {
                     />
                 )}
                 keyExtractor={item => item.title}
+                onEndReached={fetchNewData}
             />
         </SafeAreaView >
     )
